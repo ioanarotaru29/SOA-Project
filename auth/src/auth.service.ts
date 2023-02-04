@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Inject,
   Injectable,
   Logger,
@@ -7,13 +8,13 @@ import {
 import { ClientProxy } from '@nestjs/microservices';
 import { JwtService } from '@nestjs/jwt';
 import {
-  catchError,
+  catchError, EmptyError,
   lastValueFrom,
   throwError,
   timeout,
   TimeoutError,
 } from 'rxjs';
-import {compareSync, hash} from 'bcrypt';
+import { compareSync } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -58,5 +59,37 @@ export class AuthService {
       firstName: user.firstName,
       accessToken: this.jwtService.sign(payload),
     };
+  }
+
+  async register(user) {
+    Logger.log(user);
+    try {
+      const newUser = await lastValueFrom(
+        this.client.send({ role: 'user', cmd: 'create' }, { user }).pipe(
+          timeout(5000),
+          catchError((err) => {
+            if (err instanceof TimeoutError) {
+              return throwError(() => new RequestTimeoutException());
+            }
+            return throwError(err);
+          }),
+        ),
+      );
+      Logger.log(newUser);
+      if (!newUser) {
+        return throwError(() => new BadRequestException());
+      }
+
+      const payload = { newUser, sub: newUser.id };
+      return {
+        id: newUser.id,
+        lastName: newUser.lastName,
+        firstName: newUser.firstName,
+        accessToken: this.jwtService.sign(payload),
+      };
+    } catch (e) {
+      Logger.log(e);
+      throw e;
+    }
   }
 }
