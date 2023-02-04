@@ -1,8 +1,7 @@
 import { User } from './entities/user.entity';
 import { MessagePattern } from '@nestjs/microservices';
 import { UserService } from './user.service';
-import { Controller, Logger} from '@nestjs/common';
-import {lastValueFrom} from "rxjs";
+import { Controller, Logger } from '@nestjs/common';
 
 @Controller()
 export class UserController {

@@ -12,4 +12,19 @@ export class AppController {
     Logger.log(req.headers);
     return this.appService.getHello();
   }
+
+  @Get('flights')
+  getFlights(@Request() req): Promise<any> {
+    return this.appService.getFlights(req.query);
+  }
+
+  @Get('flights/sources')
+  getFlightSources(): Promise<any> {
+    return this.appService.getSources();
+  }
+
+  @Get('flights/destinations')
+  getFlightDestinations(): Promise<any> {
+    return this.appService.getDestinations();
+  }
 }
