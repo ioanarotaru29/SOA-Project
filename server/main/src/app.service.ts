@@ -23,7 +23,7 @@ export class AppService {
     @Inject('BOOKING_CLIENT')
     private readonly bookingClient: ClientProxy,
   ) {}
-    
+
 
   async getFlights(queryData: any): Promise<any> {
     const flights = await lastValueFrom(
