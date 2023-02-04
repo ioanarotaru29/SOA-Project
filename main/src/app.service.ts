@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Inject,
   Injectable,
   Logger,
@@ -18,11 +19,11 @@ export class AppService {
   constructor(
     @Inject('FLIGHT_CLIENT')
     private readonly flightClient: ClientProxy,
-  ) {}
 
-  getHello(): string {
-    return 'Hello World!';
-  }
+    @Inject('BOOKING_CLIENT')
+    private readonly bookingClient: ClientProxy,
+  ) {}
+    
 
   async getFlights(queryData: any): Promise<any> {
     const flights = await lastValueFrom(
@@ -72,5 +73,25 @@ export class AppService {
     );
     Logger.log(destinations);
     return destinations;
+  }
+
+  async createBooking(data: any): Promise<any> {
+    Logger.log(data);
+    const newBooking = await lastValueFrom(
+      this.bookingClient.send({ role: 'booking', cmd: 'create' }, data).pipe(
+        timeout(5000),
+        catchError((err) => {
+          if (err instanceof TimeoutError) {
+            return throwError(() => new RequestTimeoutException());
+          }
+          return throwError(err);
+        }),
+      ),
+    );
+    Logger.log(newBooking);
+    if (!newBooking) {
+      return throwError(() => new BadRequestException());
+    }
+    return newBooking;
   }
 }

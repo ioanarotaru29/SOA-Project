@@ -25,6 +25,16 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         },
       },
     ]),
+    ClientsModule.register([
+      {
+        name: 'BOOKING_CLIENT',
+        transport: Transport.TCP,
+        options: {
+          host: 'localhost',
+          port: 4030,
+        },
+      },
+    ]),
   ],
   controllers: [AppController],
   providers: [AppService],
