@@ -8,7 +8,7 @@ import {
 import { ClientProxy } from '@nestjs/microservices';
 import { JwtService } from '@nestjs/jwt';
 import {
-  catchError, EmptyError,
+  catchError,
   lastValueFrom,
   throwError,
   timeout,
@@ -91,5 +91,9 @@ export class AuthService {
       Logger.log(e);
       throw e;
     }
+  }
+
+  validateToken(jwt: string) {
+    return this.jwtService.verify(jwt);
   }
 }
