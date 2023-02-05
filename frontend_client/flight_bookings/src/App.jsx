@@ -2,13 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import "./index.css";
+import FlightsMainComponent from "./components/FlightsMainComponent";
 
 const App = () => (
-  <div className="container">
-    <div>Name: flight_bookings</div>
-    <div>Framework: react</div>
-    <div>Language: JavaScript</div>
-    <div>CSS: Empty CSS</div>
-  </div>
+  <React.Fragment>
+      <FlightsMainComponent/>
+  </React.Fragment>
 );
 ReactDOM.render(<App />, document.getElementById("app"));
