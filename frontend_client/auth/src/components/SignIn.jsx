@@ -1,18 +1,22 @@
 import {Avatar, Box, Button, Container, CssBaseline, Link, TextField, Typography} from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import React, {useContext, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {Navigate, useNavigate} from "react-router-dom";
 import {AuthContext} from "../providers/AuthProvider";
 
-export default function SignIn() {
-    const { login } = useContext(AuthContext)
+export default function SignIn({defaultRoute}) {
+    const { login, isAuthenticated } = useContext(AuthContext)
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const navigate = useNavigate();
     const handleSubmit = (event) => {
         event.preventDefault();
         login(email, password)
     }
     return (
+        isAuthenticated ? <Navigate to={defaultRoute}/>
+        :
         <Container component={"main"} maxWidth={"xs"}>
             <CssBaseline/>
             <Box sx={{
@@ -61,7 +65,7 @@ export default function SignIn() {
                         Sign In
                     </Button>
                 </Box>
-                <Link href={'#'} variant={'body2'} align={'left'} width={'100%'}>
+                <Link href={'#'} variant={'body2'} align={'left'} width={'100%'} onClick={() => navigate('/auth/sign_up')}>
                     {"Don't have an account? Sign Up"}
                 </Link>
             </Box>

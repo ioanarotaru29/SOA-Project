@@ -4,15 +4,17 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
-import {Router} from "react-router-dom";
+import {BrowserRouter as Router} from "react-router-dom";
 import {AuthProvider} from "./providers/AuthProvider";
+import AuthMainComponent from "./components/AuthMainComponent";
 
 const App = () => (
     <AuthProvider>
-      <div className="container">
-          <SignIn/>
-          {/*<SignUp/>*/}
-      </div>
+        <Router>
+            <AuthMainComponent defaultRoute={'/flights'}/>
+        </Router>
+      {/*<SignIn/>*/}
+      {/*<SignUp/>*/}
     </AuthProvider>
 );
 ReactDOM.render(<App />, document.getElementById("app"));

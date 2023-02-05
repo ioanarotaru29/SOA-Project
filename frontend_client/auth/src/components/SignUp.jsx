@@ -1,15 +1,17 @@
 import {Container, CssBaseline, Box, Avatar, Typography, Button, Grid, TextField, Link} from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import React, {useContext, useState} from "react";
-import { useNavigate } from "react-router-dom";
+import {Navigate, useNavigate} from "react-router-dom";
 import {AuthContext} from "../providers/AuthProvider";
 
-export default function SignUp() {
-    const { register } = useContext(AuthContext);
+export default function SignUp({defaultRoute}) {
+    const { register, isAuthenticated } = useContext(AuthContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+
+    const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -17,6 +19,8 @@ export default function SignUp() {
     }
 
     return (
+        isAuthenticated ? <Navigate to={defaultRoute}/>
+        :
         <Container component="main" maxWidth="xs">
             <CssBaseline/>
             <Box
@@ -95,7 +99,7 @@ export default function SignUp() {
                         Sign Up
                     </Button>
                 </Box>
-                <Link href={'#'} variant={'body2'} align={'left'} width={'100%'}>
+                <Link href={'#'} variant={'body2'} align={'left'} width={'100%'} onClick={() => navigate('/auth/sign_in')}>
                     {"Already have an account? Sign in"}
                 </Link>
             </Box>
