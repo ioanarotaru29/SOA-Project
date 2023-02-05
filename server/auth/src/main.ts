@@ -13,6 +13,7 @@ async function bootstrap() {
       port: 4000,
     },
   });
+  app.enableCors();
 
   await app.startAllMicroservices();
   await app.listen(3010);
