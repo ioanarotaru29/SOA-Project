@@ -41,7 +41,7 @@ module.exports = {
 
   plugins: [
     new ModuleFederationPlugin({
-      name: "flight_bookings",
+      name: "flight",
       filename: "remoteEntry.js",
       remotes: {},
       exposes: {

@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import React from "react";
-const FlightsMainComponent = React.lazy(() => import("flight_bookings/FlightsMainComponentProv"));
+const FlightsMainComponent = React.lazy(() => import("flight/FlightsMainComponentProv"));
 
 export default function FlightWrapperComponent() {
     const navigate = useNavigate();
