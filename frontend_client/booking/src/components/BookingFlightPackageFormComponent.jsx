@@ -1,10 +1,13 @@
 import React from "react";
 import {Box, Button, Container, Grid, List, ListItem, Radio, Typography} from "@mui/material";
 import {BackpackOutlined, LuggageOutlined} from "@mui/icons-material";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {selectPackageAction} from "../reducers/bookingsSlice";
 
 export default function BookingFlightPackageFormComponent({packages}) {
     const {selectedPackageId} = useSelector(state => state.bookingsSlice)
+    const dispatch = useDispatch()
+
     return (
         <Box>
             <Typography variant={"subtitle1"} color={"text.secondary"} fontWeight={"bolder"}>
@@ -22,7 +25,7 @@ export default function BookingFlightPackageFormComponent({packages}) {
                                     {pack.description}
                                 </Typography>
                             </Box>
-                            <Button variant={pack.id === selectedPackageId ? "contained" : "outlined"}>
+                            <Button variant={pack.id === selectedPackageId ? "contained" : "outlined"} onClick={() => dispatch(selectPackageAction(pack.id))}>
                                 Select
                             </Button>
                         </ListItem>

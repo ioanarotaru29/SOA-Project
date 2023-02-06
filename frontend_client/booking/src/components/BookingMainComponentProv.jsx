@@ -10,10 +10,10 @@ const reducer = combineReducers({
 
 const store = configureStore({reducer});
 
-export default function BookingMainComponentProv({user, flightId}) {
+export default function BookingMainComponentProv({user, flightId, cancelFn}) {
     return (
         <Provider store={store}>
-            <BookingMainComponent crtUser={user} flightId={flightId}/>
+            <BookingMainComponent crtUser={user} flightId={flightId} cancelFn={cancelFn}/>
         </Provider>
     )
 }

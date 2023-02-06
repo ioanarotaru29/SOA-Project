@@ -1,20 +1,22 @@
 import {
+    Alert,
     AppBar,
     Box, Button,
     Card, CardActions,
     CardContent,
     Container,
     createTheme, Divider,
-    Grid, styled,
+    Grid, LinearProgress, Snackbar, styled,
     ThemeProvider,
     Typography,
     useTheme
 } from "@mui/material";
-import React from "react";
+import React, {useState} from "react";
 import {FlightLand, FlightTakeoff} from "@mui/icons-material";
 import BookingFlightPackageFormComponent from "./BookingFlightPackageFormComponent";
 import BookingFlightUserFormComponent from "./BookingFlightUserFormComponent";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {checkoutAction} from "../reducers/bookingsSlice";
 
 
 const ArrowDivider = styled("div")`
@@ -45,8 +47,10 @@ const ArrowDivider = styled("div")`
     }
   `;
 
-export default function BookingFlightInfoComponent() {
-    const {flight, totalAmount} = useSelector(state => state.bookingsSlice)
+export default function BookingFlightInfoComponent({cancelFn}) {
+    const {flight, totalAmount, selectedPackageId, user, isProcessing, processingSuccess, processingFailed} = useSelector(state => state.bookingsSlice)
+    const dispatch = useDispatch();
+    const [closed, setClosed] = useState(true);
 
     const startDate = new Date(flight.departure);
     const endDate = new Date(flight.departureEnd);
@@ -120,12 +124,15 @@ export default function BookingFlightInfoComponent() {
             <CardActions>
                 <Grid container columns={2} spacing={2}>
                     <Grid item xs={1}>
-                        <Button fullWidth variant={"outlined"}>
+                        <Button fullWidth variant={"outlined"} onClick={() => cancelFn()}>
                             Cancel
                         </Button>
                     </Grid>
                     <Grid item xs={1}>
-                        <Button fullWidth variant={"contained"} >
+                        <Button fullWidth disabled={isProcessing} variant={"contained"} onClick={() => {
+                            dispatch(checkoutAction(user, selectedPackageId))
+                            setClosed(false)
+                        }}>
                             <Typography variant={"button"} sx={{paddingRight: 4}}>
                                 Proceed to Checkout
                             </Typography>
@@ -133,6 +140,17 @@ export default function BookingFlightInfoComponent() {
                                 {`$${totalAmount}`}
                             </Typography>
                         </Button>
+                    </Grid>
+                    <Grid item xs={2}>
+                        {isProcessing && <LinearProgress />}
+                        <Snackbar open={!closed  && (processingSuccess || processingFailed)} autoHideDuration={3000} onClose={() => setClosed(true)}>
+                                <Alert onClose={() => {
+                                    setClosed(true)
+                                    cancelFn()
+                                }} severity={processingSuccess ? "success" : "info"} sx={{ width: '100%' }}>
+                                    {processingSuccess ? "Successfully reserved" : "Oops! Something went wrong :("}
+                                </Alert>
+                        </Snackbar>
                     </Grid>
                 </Grid>
             </CardActions>

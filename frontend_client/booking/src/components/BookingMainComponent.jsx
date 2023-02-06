@@ -4,7 +4,7 @@ import BookingFlightInfoComponent from "./BookingFlightInfoComponent";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchFlightAction, setUserAction} from "../reducers/bookingsSlice";
 
-export default function BookingMainComponent({crtUser, flightId}) {
+export default function BookingMainComponent({crtUser, flightId, cancelFn}) {
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -15,7 +15,7 @@ export default function BookingMainComponent({crtUser, flightId}) {
     return (
         <Container maxWidth={"md"} sx={{marginY: 2}}>
             <CssBaseline/>
-            <BookingFlightInfoComponent/>
+            <BookingFlightInfoComponent cancelFn={cancelFn}/>
         </Container>
     )
 }
