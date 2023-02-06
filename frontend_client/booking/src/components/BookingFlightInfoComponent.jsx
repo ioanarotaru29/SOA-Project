@@ -1,19 +1,21 @@
 import {
+    AppBar,
     Box, Button,
-    Card,
-    CardActions,
+    Card, CardActions,
     CardContent,
-    Collapse,
-    Divider,
-    Grid,
-    IconButton,
-    styled,
-    Typography
+    Container,
+    createTheme, Divider,
+    Grid, styled,
+    ThemeProvider,
+    Typography,
+    useTheme
 } from "@mui/material";
-import {FlightLand, FlightTakeoff} from "@mui/icons-material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {useState} from "react";
 import React from "react";
+import {FlightLand, FlightTakeoff} from "@mui/icons-material";
+import BookingFlightPackageFormComponent from "./BookingFlightPackageFormComponent";
+import BookingFlightUserFormComponent from "./BookingFlightUserFormComponent";
+import {useSelector} from "react-redux";
+
 
 const ArrowDivider = styled("div")`
   ${({ color }) => color && `color: ${color};`}
@@ -43,15 +45,14 @@ const ArrowDivider = styled("div")`
     }
   `;
 
+export default function BookingFlightInfoComponent() {
+    const {flight, totalAmount} = useSelector(state => state.bookingsSlice)
 
-export default function FlightListItemComponent({item, onClickEvent}) {
-    const date = new Date(item.departure);
-    const dateEnd = new Date(item.departureEnd);
-    const minPackage = item.packages.reduce((previousValue, currentValue) =>
-        previousValue.amount < currentValue.amount ? previousValue : currentValue)
+    const startDate = new Date(flight.departure);
+    const endDate = new Date(flight.departureEnd);
 
-    const computeDateDiff = (dateStart, dateEnd) => {
-        const seconds = Math.floor((dateEnd - (dateStart)) / 1000);
+    const computeDateDiff = (startDate, endDate) => {
+        const seconds = Math.floor((endDate - (startDate)) / 1000);
         let minutes = Math.floor(seconds / 60);
         const hours = Math.floor(minutes / 60);
 
@@ -60,30 +61,30 @@ export default function FlightListItemComponent({item, onClickEvent}) {
     }
 
     return (
-        <Card sx={{width: '100%', my: 1}} elevation={2}>
+        <Card elevation={2}>
             <CardContent>
-                <Grid container spacing={2} columns={4}>
+                <Grid container spacing={2} columns={3}>
                     <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
                         <FlightTakeoff color={"disabled"} sx={{mx: 2}}/>
                         <Box sx={{display: 'flex', alignItems: 'baseline'}}>
                             <Box sx={{display: 'flex', alignItems: 'center', mt: 2, flexDirection: "column"}}>
                                 <Typography variant="body1" color="text.secondary" fontWeight={"bold"} textAlign={"center"}
                                             sx={{mx: 1}}>
-                                    {date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                    {startDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                                 </Typography>
                                 <Typography variant={"caption"} color={"text.secondary"} fontWeight={"lighter"}>
-                                    {date.toLocaleDateString([], {month: 'short', day: 'numeric' })}
+                                    {startDate.toLocaleDateString([], {month: 'short', day: 'numeric' })}
                                 </Typography>
                             </Box>
-                            <Typography variant="body" color="text.secondary">{item.source}</Typography>
+                            <Typography variant="body" color="text.secondary">{flight.source}</Typography>
                         </Box>
                     </Grid>
                     <Grid item xs={1}>
                         <ArrowDivider/>
                         <Box sx={{display: "flex", justifyContent: "center"}}>
                             <Typography display={"block"} variant="caption" color="text.secondary" fontWeight={"bold"} textAlign={"center"}
-                                    sx={{mx: 1}}>
-                                {`${computeDateDiff(date, dateEnd).hours}h ${computeDateDiff(date, dateEnd).minutes}m`}
+                                        sx={{mx: 1}}>
+                                {`${computeDateDiff(startDate, endDate).hours}h ${computeDateDiff(startDate, endDate).minutes}m`}
                             </Typography>
                             <Typography display={"block"} variant="caption" color="text.secondary" fontWeight={"lighter"} textAlign={"center"}
                                         sx={{mx: 1}}>
@@ -97,32 +98,44 @@ export default function FlightListItemComponent({item, onClickEvent}) {
                             <Box sx={{display: 'flex', alignItems: 'center', mt: 2, flexDirection: "column"}}>
                                 <Typography variant="body1" color="text.secondary" fontWeight={"bold"} textAlign={"center"}
                                             sx={{mx: 1}}>
-                                    {dateEnd.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                    {endDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                                 </Typography>
                                 <Typography variant={"caption"} color={"text.secondary"} fontWeight={"lighter"}>
-                                    {dateEnd.toLocaleDateString([], {month: 'short', day: 'numeric' })}
+                                    {endDate.toLocaleDateString([], {month: 'short', day: 'numeric' })}
                                 </Typography>
                             </Box>
-                            <Typography variant="body" color="text.secondary">{item.destination}</Typography>
+                            <Typography variant="body" color="text.secondary">{flight.destination}</Typography>
                         </Box>
-                    </Grid>
-                    <Grid item xs={1} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', borderLeft: '1px solid rgba(0, 0, 0, 0.26)', mt: 1}}>
-                        <Typography variant="body2" color="text.secondary"
-                                    sx={{mx: 1}}>
-                            Starting from:
-                        </Typography>
-                        <Typography variant="h6" color="text.secondary" fontWeight={"bold"}
-                                    sx={{mx: 1}}>
-                            {`$${minPackage.amount}`}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary" fontWeight={"lighter"}
-                                    sx={{mx: 1}}>
-                            {minPackage.description}
-                        </Typography>
-                        <Button variant={"contained"} color={"primary"} onClick={()=> onClickEvent(item.id)}>Reserve</Button>
                     </Grid>
                 </Grid>
             </CardContent>
+            <Divider variant="middle"/>
+            <CardContent>
+                <BookingFlightPackageFormComponent packages={flight.packages || []}/>
+            </CardContent>
+            <Divider variant={"middle"}/>
+            <CardContent>
+                <BookingFlightUserFormComponent/>
+            </CardContent>
+            <CardActions>
+                <Grid container columns={2} spacing={2}>
+                    <Grid item xs={1}>
+                        <Button fullWidth variant={"outlined"}>
+                            Cancel
+                        </Button>
+                    </Grid>
+                    <Grid item xs={1}>
+                        <Button fullWidth variant={"contained"} >
+                            <Typography variant={"button"} sx={{paddingRight: 4}}>
+                                Proceed to Checkout
+                            </Typography>
+                            <Typography sx={{borderLeft: '1px solid white', paddingLeft: 4}}>
+                                {`$${totalAmount}`}
+                            </Typography>
+                        </Button>
+                    </Grid>
+                </Grid>
+            </CardActions>
         </Card>
     )
 }
