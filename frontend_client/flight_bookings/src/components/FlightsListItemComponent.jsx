@@ -55,7 +55,7 @@ const ArrowDivider = styled("div")`
   `;
 
 
-export default function FlightListItemComponent({item}) {
+export default function FlightListItemComponent({item, onClickEvent}) {
     const date = new Date(item.departure);
     const dateEnd = new Date(item.departureEnd);
     const minPackage = item.packages.reduce((previousValue, currentValue) =>
@@ -130,7 +130,7 @@ export default function FlightListItemComponent({item}) {
                                     sx={{mx: 1}}>
                             {minPackage.description}
                         </Typography>
-                        <Button variant={"contained"} color={"primary"}>Reserve</Button>
+                        <Button variant={"contained"} color={"primary"} onClick={()=> onClickEvent(item.id)}>Reserve</Button>
                     </Grid>
                 </Grid>
             </CardContent>

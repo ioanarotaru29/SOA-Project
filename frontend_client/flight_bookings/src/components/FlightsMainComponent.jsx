@@ -4,7 +4,7 @@ import FlightFiltersComponent from "./FlightFiltersComponent";
 import FlightListViewComponent from "./FlightListViewComponent";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchFiltersAction, fetchFlightsAction, filterFlightsAction} from "../reducers/flightsSlice";
-export default function FlightsMainComponent() {
+export default function FlightsMainComponent({reserveFn}) {
     const {flights, filters} = useSelector((state) => state.flightsSlice);
     const dispatch = useDispatch();
 
@@ -21,7 +21,7 @@ export default function FlightsMainComponent() {
         <Box sx={{ width: '100%' }}>
             <CssBaseline/>
             <FlightFiltersComponent sources={filters.sources} destinations={filters.destinations} onClickEvent={filtersSubmit}/>
-            <FlightListViewComponent items={flights}/>
+            <FlightListViewComponent items={flights} onClickEvent={reserveFn}/>
         </Box>
     )
 }

@@ -46,7 +46,8 @@ module.exports = {
       remotes: {},
       exposes: {
         "./AuthMainComponent": "./src/components/AuthMainComponent",
-        "./AuthContext": "./src/providers/AuthProvider"
+        "./AuthContext": "./src/providers/AuthProvider",
+        "./PrivateRoute": "./src/components/PrivateRoute"
       },
       shared: {
         ...deps,

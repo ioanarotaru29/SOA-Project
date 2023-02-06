@@ -10,10 +10,10 @@ const reducer = combineReducers({
 
 const store = configureStore({reducer});
 
-export default function FlightsMainComponentProv() {
+export default function FlightsMainComponentProv({reserveFn}) {
     return (
         <Provider store={store}>
-            <FlightsMainComponent/>
+            <FlightsMainComponent reserveFn={reserveFn}/>
         </Provider>
     )
 }

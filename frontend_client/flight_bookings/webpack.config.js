@@ -44,7 +44,9 @@ module.exports = {
       name: "flight_bookings",
       filename: "remoteEntry.js",
       remotes: {},
-      exposes: {},
+      exposes: {
+        './FlightsMainComponentProv': './src/components/FlightsMainComponentProv'
+      },
       shared: {
         ...deps,
         react: {
