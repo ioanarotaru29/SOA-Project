@@ -44,7 +44,9 @@ module.exports = {
       name: "booking",
       filename: "remoteEntry.js",
       remotes: {},
-      exposes: {},
+      exposes: {
+        "./BookingMainComponentProv": "./src/components/BookingMainComponentProv"
+      },
       shared: {
         ...deps,
         react: {

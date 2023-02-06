@@ -8,6 +8,7 @@ import { PrivateRoute } from "auth/PrivateRoute";
 import TestComponent from "../TestComponent";
 import FlightWrapperComponent from "./components/FlightWrapperComponent";
 import AuthWrapperComponent from "./components/AuthWrapperComponent";
+import BookingWrapperComponent from "./components/BookingWrapperComponent";
 
 const App = () => (
     <AuthProvider>
@@ -17,7 +18,11 @@ const App = () => (
 
                 <Route path={'/'} element={<Navigate to={'flights'}/>}/>
                 <Route path={'/flights'} element={<FlightWrapperComponent/>}/>
-                <Route path={'/flights/:id/reserve'} element={<TestComponent/>}/>
+                <Route path={'/flights/:id/reserve'} element={
+                    <PrivateRoute redirectPath={'/auth/'}>
+                        <BookingWrapperComponent/>
+                    </PrivateRoute>
+                }/>
 
                 {/*<Route path={'/flights'} element={*/}
                 {/*    <PrivateRoute redirectPath={'/auth'}>*/}

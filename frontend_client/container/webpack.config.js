@@ -46,6 +46,7 @@ module.exports = {
       remotes: {
         auth: "auth@http://localhost:8081/remoteEntry.js",
         flight: "flight@http://localhost:8082/remoteEntry.js",
+        booking: "booking@http://localhost:8083/remoteEntry.js"
       },
       exposes: {},
       shared: {

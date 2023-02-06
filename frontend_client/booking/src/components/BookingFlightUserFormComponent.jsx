@@ -7,7 +7,7 @@ export default function BookingFlightUserFormComponent() {
             <Typography variant={"subtitle1"} color={"text.secondary"} fontWeight={"bolder"}>
                 Contact Details
             </Typography>
-            <Box component={"form"} noValidate>
+            <Box component={"form"}>
                 <Grid container columns={4} spacing={2}>
                     <Grid item xs={2}>
                         <TextField
