@@ -22,6 +22,9 @@ export class Flight implements FlightInterface {
   @Column()
   departure: Date;
 
+  @Column()
+  departureEnd: Date;
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -5,5 +5,6 @@ export interface FlightInterface {
   source: string;
   destination: string;
   departure: Date;
+  departureEnd: Date;
   packages: FlightPackage[];
 }

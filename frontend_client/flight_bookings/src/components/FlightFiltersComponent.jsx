@@ -12,12 +12,26 @@ import {
     Typography, useTheme
 } from "@mui/material";
 
-import React from "react";
+import React, {useState} from "react";
 import {DateTimePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
-import {AirplaneTicket, FlightLand, FlightTakeoff, DateRange, DateRangeOutlined, Search} from "@mui/icons-material";
+import {
+    AirplaneTicket,
+    FlightLand,
+    FlightTakeoff,
+    DateRange,
+    DateRangeOutlined,
+    Search,
+    Clear
+} from "@mui/icons-material";
+import {useDispatch, useSelector} from "react-redux";
 
-export default function FlightFiltersComponent() {
+export default function FlightFiltersComponent({sources, destinations, onClickEvent}) {
+    const [source, setSource] = useState('');
+    const [destination, setDestination] = useState('');
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+
     const darkTheme = createTheme({
         palette: {
             mode: 'dark',
@@ -37,7 +51,7 @@ export default function FlightFiltersComponent() {
                     </Toolbar>
                     <Divider/>
                     <Box component={"form"} noValidate sx={{ mt: 0 }}>
-                        <Grid container spacing={2} columns={13}>
+                        <Grid container spacing={2} columns={14}>
                             <Grid item xs={3} sx={{ display: 'flex', alignItems: 'center'}}>
                                 <FlightTakeoff sx={{ color: 'action.active', mr: 0, my: 0.5 }}/>
                                 <FormControl sx={{ m: 1, width: "100%"}}>
@@ -45,10 +59,12 @@ export default function FlightFiltersComponent() {
                                     <Select
                                         label="Departure"
                                         variant={"standard"}
+                                        value={source}
+                                        onChange={event => setSource(event.target.value)}
                                     >
-                                        <MenuItem value={10}>Ten</MenuItem>
-                                        <MenuItem value={20}>Twenty</MenuItem>
-                                        <MenuItem value={30}>Thirty</MenuItem>
+                                        {
+                                            sources.map((source, i) => <MenuItem key={i} value={source}>{source}</MenuItem> )
+                                        }
                                     </Select>
                                     <FormHelperText>Select your departure place</FormHelperText>
                                 </FormControl>
@@ -60,16 +76,17 @@ export default function FlightFiltersComponent() {
                                     <Select
                                     label="Arrival"
                                     variant={"standard"}
+                                    value={destination}
+                                    onChange={event => setDestination(event.target.value)}
                                     >
-                                        <MenuItem value={10}>Ten</MenuItem>
-                                        <MenuItem value={20}>Twenty</MenuItem>
-                                        <MenuItem value={30}>Thirty</MenuItem>
+                                        {
+                                            destinations.map((destination, i) => <MenuItem key={i} value={destination}>{destination}</MenuItem> )
+                                        }
                                     </Select>
                                     <FormHelperText>Select your arrival place</FormHelperText>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={3} sx={{ display: 'flex', alignItems: 'center'}}>
-                                <DateRangeOutlined sx={{ color: 'action.active', mr: 0.5, my: 0.5 }}/>
                                 <LocalizationProvider dateAdapter={AdapterMoment}>
                                     <DateTimePicker
                                         renderInput={(props) =>
@@ -78,14 +95,15 @@ export default function FlightFiltersComponent() {
                                                        helperText={"Select minimum departure date"}
                                                        margin={"normal"}
                                                        label="Start Date"
-                                                       InputProps={null}
                                                        fullWidth
                                             />}
+                                        inputFormat={"DD MMM, YY HH:mm"}
+                                        value={startDate}
+                                        onChange={newValue => setStartDate(newValue)}
                                     />
                                 </LocalizationProvider>
                             </Grid>
                             <Grid item xs={3} sx={{ display: 'flex', alignItems: 'center'}}>
-                                <DateRangeOutlined sx={{ color: 'action.active', mr: 0.5, my: 0.5 }}/>
                                 <LocalizationProvider dateAdapter={AdapterMoment}>
                                     <DateTimePicker
                                         renderInput={(props) =>
@@ -94,15 +112,27 @@ export default function FlightFiltersComponent() {
                                                        helperText={"Select maximum departure date"}
                                                        margin={"normal"}
                                                        label="End Date"
-                                                       InputProps={null}
                                                        fullWidth
                                             />}
+                                        inputFormat={"DD MMM, YY HH:mm"}
+                                        value={endDate}
+                                        onChange={newValue => setEndDate(newValue)}
                                     />
                                 </LocalizationProvider>
                             </Grid>
-                            <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center'}}>
-                                <Button variant={"solid"}>
+                            <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center'}}>
+                                <Button variant={"solid"} onClick={() => onClickEvent(source, destination, startDate, endDate)}>
                                     <Search/>
+                                </Button>
+                                <Button variant={"solid"} onClick={() => {
+                                    setSource('');
+                                    setDestination('');
+                                    setStartDate(null);
+                                    setEndDate(null);
+                                    onClickEvent('', '', null, null);
+                                }
+                                }>
+                                    <Clear/>
                                 </Button>
                             </Grid>
                         </Grid>

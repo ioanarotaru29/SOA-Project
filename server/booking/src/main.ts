@@ -14,6 +14,6 @@ async function bootstrap() {
   });
 
   await app.startAllMicroservices();
-  Logger.log('Flights microservice running...');
+  Logger.log('Bookings microservice running...');
 }
 bootstrap();

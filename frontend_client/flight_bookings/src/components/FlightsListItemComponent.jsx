@@ -55,8 +55,20 @@ const ArrowDivider = styled("div")`
   `;
 
 
-export default function FlightListItemComponent() {
-    const [expanded, setExpanded] = useState(false);
+export default function FlightListItemComponent({item}) {
+    const date = new Date(item.departure);
+    const dateEnd = new Date(item.departureEnd);
+    const minPackage = item.packages.reduce((previousValue, currentValue) =>
+        previousValue.amount < currentValue.amount ? previousValue : currentValue)
+
+    const computeDateDiff = (dateStart, dateEnd) => {
+        const seconds = Math.floor((dateEnd - (dateStart)) / 1000);
+        let minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+
+        minutes = minutes - (hours * 60);
+        return {hours, minutes};
+    }
 
     return (
         <Card sx={{width: '100%', my: 1}} elevation={2}>
@@ -64,26 +76,46 @@ export default function FlightListItemComponent() {
                 <Grid container spacing={2} columns={4}>
                     <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
                         <FlightTakeoff color={"disabled"} sx={{mx: 2}}/>
-                        <Typography variant="body" color="text.secondary" fontWeight={"bold"}
-                                    sx={{mx: 1}}>
-                            20:00
-                        </Typography>
-                        <Typography variant="body" color="text.secondary">Depart</Typography>
+                        <Box sx={{display: 'flex', alignItems: 'baseline'}}>
+                            <Box sx={{display: 'flex', alignItems: 'center', mt: 2, flexDirection: "column"}}>
+                                <Typography variant="body1" color="text.secondary" fontWeight={"bold"} textAlign={"center"}
+                                            sx={{mx: 1}}>
+                                    {date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                </Typography>
+                                <Typography variant={"caption"} color={"text.secondary"} fontWeight={"lighter"}>
+                                    {date.toLocaleDateString([], {month: 'short', day: 'numeric' })}
+                                </Typography>
+                            </Box>
+                            <Typography variant="body" color="text.secondary">{item.source}</Typography>
+                        </Box>
                     </Grid>
                     <Grid item xs={1}>
                         <ArrowDivider/>
-                        <Typography display={"block"} variant="caption" color="text.secondary" fontWeight={"bold"} textAlign={"center"}
+                        <Box sx={{display: "flex", justifyContent: "center"}}>
+                            <Typography display={"block"} variant="caption" color="text.secondary" fontWeight={"bold"} textAlign={"center"}
                                     sx={{mx: 1}}>
-                            20:00
-                        </Typography>
+                                {`${computeDateDiff(date, dateEnd).hours}h ${computeDateDiff(date, dateEnd).minutes}m`}
+                            </Typography>
+                            <Typography display={"block"} variant="caption" color="text.secondary" fontWeight={"lighter"} textAlign={"center"}
+                                        sx={{mx: 1}}>
+                                Direct flight
+                            </Typography>
+                        </Box>
                     </Grid>
                     <Grid item xs={1} sx={{display: 'flex', alignItems: 'center'}}>
                         <FlightLand color={"disabled"} sx={{mx: 2}}/>
-                        <Typography variant="body" color="text.secondary" fontWeight={"bold"}
-                                    sx={{mx: 1}}>
-                            20:00
-                        </Typography>
-                        <Typography variant="body" color="text.secondary">Arrival</Typography>
+                        <Box sx={{display: 'flex', alignItems: 'baseline'}}>
+                            <Box sx={{display: 'flex', alignItems: 'center', mt: 2, flexDirection: "column"}}>
+                                <Typography variant="body1" color="text.secondary" fontWeight={"bold"} textAlign={"center"}
+                                            sx={{mx: 1}}>
+                                    {dateEnd.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                </Typography>
+                                <Typography variant={"caption"} color={"text.secondary"} fontWeight={"lighter"}>
+                                    {dateEnd.toLocaleDateString([], {month: 'short', day: 'numeric' })}
+                                </Typography>
+                            </Box>
+                            <Typography variant="body" color="text.secondary">{item.destination}</Typography>
+                        </Box>
                     </Grid>
                     <Grid item xs={1} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', borderLeft: '1px solid rgba(0, 0, 0, 0.26)', mt: 1}}>
                         <Typography variant="body2" color="text.secondary"
@@ -92,7 +124,11 @@ export default function FlightListItemComponent() {
                         </Typography>
                         <Typography variant="h6" color="text.secondary" fontWeight={"bold"}
                                     sx={{mx: 1}}>
-                            $50
+                            {`$${minPackage.amount}`}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" fontWeight={"lighter"}
+                                    sx={{mx: 1}}>
+                            {minPackage.description}
                         </Typography>
                         <Button variant={"contained"} color={"primary"}>Reserve</Button>
                     </Grid>
