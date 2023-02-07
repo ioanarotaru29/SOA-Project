@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {selectPackageAction} from "../reducers/bookingsSlice";
 
 export default function BookingFlightPackageFormComponent({packages}) {
-    const {selectedPackageId} = useSelector(state => state.bookingsSlice)
+    const {selectedPackage} = useSelector(state => state.bookingsSlice)
     const dispatch = useDispatch()
 
     return (
@@ -25,7 +25,7 @@ export default function BookingFlightPackageFormComponent({packages}) {
                                     {pack.description}
                                 </Typography>
                             </Box>
-                            <Button variant={pack.id === selectedPackageId ? "contained" : "outlined"} onClick={() => dispatch(selectPackageAction(pack.id))}>
+                            <Button variant={pack.id === selectedPackage.id ? "contained" : "outlined"} onClick={() => dispatch(selectPackageAction(pack.id))}>
                                 Select
                             </Button>
                         </ListItem>

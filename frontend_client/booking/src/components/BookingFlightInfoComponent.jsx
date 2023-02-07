@@ -48,7 +48,7 @@ const ArrowDivider = styled("div")`
   `;
 
 export default function BookingFlightInfoComponent({cancelFn}) {
-    const {flight, totalAmount, selectedPackageId, user, isProcessing, processingSuccess, processingFailed} = useSelector(state => state.bookingsSlice)
+    const {flight, totalAmount, selectedPackage, user, isProcessing, processingFailed} = useSelector(state => state.bookingsSlice)
     const dispatch = useDispatch();
     const [closed, setClosed] = useState(true);
 
@@ -130,7 +130,7 @@ export default function BookingFlightInfoComponent({cancelFn}) {
                     </Grid>
                     <Grid item xs={1}>
                         <Button fullWidth disabled={isProcessing} variant={"contained"} onClick={() => {
-                            dispatch(checkoutAction(user, selectedPackageId))
+                            dispatch(checkoutAction(user, selectedPackage))
                             setClosed(false)
                         }}>
                             <Typography variant={"button"} sx={{paddingRight: 4}}>
@@ -143,12 +143,12 @@ export default function BookingFlightInfoComponent({cancelFn}) {
                     </Grid>
                     <Grid item xs={2}>
                         {isProcessing && <LinearProgress />}
-                        <Snackbar open={!closed  && (processingSuccess || processingFailed)} autoHideDuration={3000} onClose={() => setClosed(true)}>
+                        <Snackbar open={!closed  && (processingFailed)} autoHideDuration={3000} onClose={() => setClosed(true)}>
                                 <Alert onClose={() => {
                                     setClosed(true)
                                     cancelFn()
-                                }} severity={processingSuccess ? "success" : "info"} sx={{ width: '100%' }}>
-                                    {processingSuccess ? "Successfully reserved" : "Oops! Something went wrong :("}
+                                }} severity={"info"} sx={{ width: '100%' }}>
+                                    {"Oops! Something went wrong :("}
                                 </Alert>
                         </Snackbar>
                     </Grid>

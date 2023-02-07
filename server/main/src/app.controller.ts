@@ -33,4 +33,10 @@ export class AppController {
   createBooking(@Request() req): Promise<any> {
     return this.appService.createBooking(req.body);
   }
+
+  @Post('/payment/webhook')
+  webhook(@Request() req): string {
+    Logger.log(req.body);
+    return 'Success';
+  }
 }

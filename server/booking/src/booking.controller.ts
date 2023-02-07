@@ -8,13 +8,13 @@ export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
   @MessagePattern({ role: 'booking', cmd: 'create' })
-  async createBooking(data: any): Promise<Booking> {
+  async createBooking(data: any): Promise<any> {
     Logger.log(data);
     try {
-      const insertResult = await this.bookingService.createBooking(data);
-      return this.bookingService.findOne({
-        where: { id: insertResult.identifiers.at(0).id },
-      });
+      return this.bookingService.createBooking(data);
+      // return this.bookingService.findOne({
+      //   where: { id: insertResult.identifiers.at(0).id },
+      // });
     } catch (e) {
       Logger.log(e);
     }

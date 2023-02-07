@@ -6,11 +6,12 @@ export const bookingsSlice = createSlice({
     initialState: {
         user: {},
         flight: {},
-        selectedPackageId: -1,
+        selectedPackage: {},
         totalAmount: 0,
         isProcessing: false,
         processingFailed: false,
-        processingSuccess: false
+        processingSuccess: false,
+        payUrl: null
     },
     reducers: {
         setUser: (state, action) => {
@@ -20,12 +21,12 @@ export const bookingsSlice = createSlice({
             state.flight = action.payload ? action.payload : {}
             if (action.payload) {
                 const minPackage = action.payload.packages.reduce((previousValue, currentValue) => previousValue.amount < currentValue.amount ? previousValue : currentValue)
-                state.selectedPackageId = minPackage.id;
+                state.selectedPackage = minPackage;
                 state.totalAmount = minPackage.amount;
             }
         },
         setPackage: (state, action) => {
-            state.selectedPackageId = action.payload;
+            state.selectedPackage = state.flight.packages.find(pack => pack.id === action.payload);
             state.totalAmount = state.flight.packages.find(pack => pack.id === action.payload).amount;
         },
         startProcess: (state) => {
@@ -33,10 +34,11 @@ export const bookingsSlice = createSlice({
             state.processingSuccess = false;
             state.processingFailed = false;
         },
-        successProcess: (state) => {
+        successProcess: (state, action) => {
             state.isProcessing = false;
             state.processingSuccess = true;
             state.processingFailed = false;
+            state.payUrl = action.payload;
         },
         failedProcess: (state) => {
             state.isProcessing = false;
@@ -65,12 +67,12 @@ export const selectPackageAction = (packageId) => async (dispatch) => {
     dispatch(setPackage(packageId));
 }
 
-export const checkoutAction = (user, packageId) => async (dispatch) => {
+export const checkoutAction = (user, pack) => async (dispatch) => {
     try {
         dispatch(startProcess());
 
-        await createBooking(user.id, packageId, user.token);
-        dispatch(successProcess());
+        const url = await createBooking(user.id, pack, user.token);
+        dispatch(successProcess(url));
     }catch (e) {
         dispatch(failedProcess());
         console.log(e);

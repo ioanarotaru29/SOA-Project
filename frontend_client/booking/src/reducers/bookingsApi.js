@@ -12,12 +12,17 @@ export const getFlight = async (flightId) => {
     return flights.at(0);
 }
 
-export const createBooking = async (userId, packageId, token) => {
+export const createBooking = async (userId, pack, token) => {
     const config = {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         }
     }
-    return await axios.post(`http://${baseUrl}/bookings/`, {userId: userId, packageId: packageId}, config).then(res => res.data)
+    return await axios.post(`http://${baseUrl}/bookings/`, {userId: userId,
+        packageId: pack.id,
+        amount: pack.amount,
+        name: pack.description,
+        redirectUrl: window.location.href,
+        }, config).then(res => res.data)
 }

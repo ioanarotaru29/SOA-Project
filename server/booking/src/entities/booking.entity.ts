@@ -20,7 +20,7 @@ export class Booking implements BookingInterface {
   @Column({
     type: 'enum',
     enum: ['success', 'pending', 'denied'],
-    default: 'success',
+    default: 'pending',
   })
   status: Status;
 
