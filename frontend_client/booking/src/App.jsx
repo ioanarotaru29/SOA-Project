@@ -14,8 +14,8 @@ const user = {
 }
 const App = () => (
   <div>
-      <BookingFinalizeComponent/>
-    {/*<BookingMainComponentProv user={user} flightId={1} cancelFn={()=>console.log("CANCEL")}/>*/}
+      {/*<BookingFinalizeComponent/>*/}
+    <BookingMainComponentProv user={user} flightId={1} cancelFn={()=>console.log("CANCEL")} skipAuth={true}/>
   </div>
 );
 ReactDOM.render(<App />, document.getElementById("app"));

@@ -23,6 +23,6 @@ export const createBooking = async (userId, pack, token) => {
         packageId: pack.id,
         amount: pack.amount,
         name: pack.description,
-        redirectUrl: window.location.href,
+        redirectUrl: `${window.location.href}?skipAuth=true`,
         }, config).then(res => res.data)
 }

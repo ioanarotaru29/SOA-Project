@@ -4,7 +4,6 @@ import { AuthProvider } from "auth/AuthContext";
 import {BrowserRouter as Router, Routes, Route, Navigate, useNavigate} from "react-router-dom";
 
 import "./index.css";
-import { PrivateRoute } from "auth/PrivateRoute";
 import TestComponent from "../TestComponent";
 import FlightWrapperComponent from "./components/FlightWrapperComponent";
 import AuthWrapperComponent from "./components/AuthWrapperComponent";
@@ -18,11 +17,7 @@ const App = () => (
 
                 <Route path={'/'} element={<Navigate to={'flights'}/>}/>
                 <Route path={'/flights'} element={<FlightWrapperComponent/>}/>
-                <Route path={'/flights/:id/reserve'} element={
-                    <PrivateRoute redirectPath={'/auth/'}>
-                        <BookingWrapperComponent/>
-                    </PrivateRoute>
-                }/>
+                <Route path={'/flights/:id/reserve'} element={<BookingWrapperComponent/>}/>
 
                 {/*<Route path={'/flights'} element={*/}
                 {/*    <PrivateRoute redirectPath={'/auth'}>*/}

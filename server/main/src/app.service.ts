@@ -13,6 +13,7 @@ import {
   timeout,
   TimeoutError,
 } from 'rxjs';
+import { SseService } from './sse.service';
 
 @Injectable()
 export class AppService {
@@ -22,6 +23,8 @@ export class AppService {
 
     @Inject('BOOKING_CLIENT')
     private readonly bookingClient: ClientProxy,
+
+    private readonly sseService: SseService,
   ) {}
 
   async getFlights(queryData: any): Promise<any> {
@@ -102,6 +105,16 @@ export class AppService {
         { data, signature },
       ),
     );
+
+    await this.sleep(10000);
     Logger.log(res);
+    this.sseService.addEvent(JSON.stringify(res));
+    return res;
+  }
+
+  sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
   }
 }
