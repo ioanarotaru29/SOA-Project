@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Logger } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { MessagePattern } from '@nestjs/microservices';
 
@@ -7,7 +7,12 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @MessagePattern({ role: 'payment', cmd: 'create' })
-  async createBooking(data: any): Promise<string> {
+  async createSession(data: any): Promise<string> {
     return this.paymentService.charge(data);
+  }
+
+  @MessagePattern({ role: 'payment', cmd: 'get_product' })
+  async getProduct({ data, signature }: any): Promise<number> {
+    return this.paymentService.getProduct(data, signature);
   }
 }

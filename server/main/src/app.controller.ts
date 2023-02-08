@@ -3,18 +3,22 @@ import {
   Get,
   Logger,
   UseGuards,
-  Request,
   Post,
+  Sse,
+  Req,
+  RawBodyRequest,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { AppService } from './app.service';
 import { AuthGuard } from './guards/auth.guard';
+import { interval, map, Observable } from 'rxjs';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('flights')
-  getFlights(@Request() req): Promise<any> {
+  getFlights(@Req() req): Promise<any> {
     return this.appService.getFlights(req.query);
   }
 
@@ -30,13 +34,21 @@ export class AppController {
 
   @UseGuards(AuthGuard)
   @Post('bookings')
-  createBooking(@Request() req): Promise<any> {
+  createBooking(@Req() req): Promise<any> {
     return this.appService.createBooking(req.body);
   }
 
-  @Post('/payment/webhook')
-  webhook(@Request() req): string {
-    Logger.log(req.body);
-    return 'Success';
+  @Post('/bookings/webhook')
+  webhook(@Req() req: RawBodyRequest<Request>): Promise<void> {
+    return this.appService.updateBooking(
+      req.rawBody,
+      req.headers['stripe-signature'],
+    );
+  }
+
+  @Sse('/sse')
+  sse(): Observable<any> {
+    return null;
+    // return this.appService.subscribe();
   }
 }

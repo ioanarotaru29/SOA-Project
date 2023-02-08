@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import BookingMainComponent from "./components/BookingMainComponent";
 import BookingMainComponentProv from "./components/BookingMainComponentProv";
+import BookingFinalizeComponent from "./components/BookingFinalizeComponent";
 
 const user = {
     id: 1,
@@ -13,7 +14,8 @@ const user = {
 }
 const App = () => (
   <div>
-    <BookingMainComponentProv user={user} flightId={1} cancelFn={()=>console.log("CANCEL")}/>
+      <BookingFinalizeComponent/>
+    {/*<BookingMainComponentProv user={user} flightId={1} cancelFn={()=>console.log("CANCEL")}/>*/}
   </div>
 );
 ReactDOM.render(<App />, document.getElementById("app"));

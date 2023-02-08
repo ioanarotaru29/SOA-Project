@@ -24,7 +24,6 @@ export class AppService {
     private readonly bookingClient: ClientProxy,
   ) {}
 
-
   async getFlights(queryData: any): Promise<any> {
     const flights = await lastValueFrom(
       this.flightClient.send({ role: 'flight', cmd: 'get' }, queryData).pipe(
@@ -88,10 +87,21 @@ export class AppService {
         }),
       ),
     );
-    Logger.log(newBooking);
+    // Logger.log(newBooking);
     if (!newBooking) {
       return throwError(() => new BadRequestException());
     }
     return newBooking;
+  }
+
+  async updateBooking(data: any, signature: any): Promise<any> {
+    Logger.log(data, signature);
+    const res = await lastValueFrom(
+      this.bookingClient.send(
+        { role: 'booking', cmd: 'update' },
+        { data, signature },
+      ),
+    );
+    Logger.log(res);
   }
 }
