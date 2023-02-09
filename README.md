@@ -63,85 +63,119 @@ graph TD
 
 #### Services
 ```mermaid
----
-title: Main Service
----
 graph TD
     Client(Client)-->AppController
     AppService
     AuthGuard
-    subgraph main
+    subgraph main[Main Service]
       AppController --> AppService
       AppController --> AuthGuard
     end
-    AppService-->flight(Flight Service)
-    AppService-->booking(Booking Service)
-    AuthGuard-->auth(Auth Service)
-```
-
-```mermaid
----
-title: Auth Service
----
-graph TD
-    Client(Client)-->AuthController
+    AppService-->FlightController
+    AppService-->BookingController
+    AuthGuard-->AuthController
     AuthService
-    subgraph auth
+    subgraph auth[Auth Service]
       AuthController --> AuthService
     end
-    AuthService-->user(User Service)
-```
-
-```mermaid
----
-title: User Service
----
-graph TD
-    Client(Client)-->UserController
+    AuthService-->UserController
     UserService
-    subgraph user
+    subgraph user[User Service]
       UserController --> UserService
     end
     UserService-->database[(MySQL Database)]
-```
 
-```mermaid
----
-title: Flight Service
----
-graph TD
-    Client(Client)-->FlightController
     FlightService
-    subgraph flight
+    subgraph flight[Flight Service]
       FlightController --> FlightService
     end
     FlightService-->database[(MySQL Database)]
-```
-
-```mermaid
----
-title: Booking Service
----
-graph TD
-    Client(Client)-->BookingController
+    
     BookingService
-    subgraph booking
+    subgraph booking[Booking Service]
       BookingController --> BookingService
     end
     BookingService-->database[(MySQL Database)]
-    BookingService-->payment(Payment Service)
-```
-
-```mermaid
----
-title: Payment Service
----
-graph TD
-    Client(Client)-->PaymentController
+    BookingService-->PaymentController
+    
     PaymentService
-    subgraph payment
+    subgraph payment[Payment Service]
       PaymentController --> PaymentService
     end
     PaymentService-->database[(MySQL Database)]
     PaymentService-->paymentSys("Payment Processing System \n<i>#lt;External System#gt;</i>")
+```
+
+
+### Code
+```mermaid
+classDiagram
+    UserInterface<|..User
+    FlightInterface<|..Flight
+    BookingInterface<|..Booking
+    FlightPackageInterface<|..FlightPackage
+    StripeToProductInterface<|..StripeToProduct
+    
+    class UserInterface{
+    <<interface>>
+    +number id
+    +string lastName
+    +string firstName
+    +string email
+    +string password}
+    
+    class User{
+    +Date createdAt}
+    
+    class FlightInterface{
+    <<interface>>
+    +number id
+    +string source
+    +string destination
+    +Date departure
+    +Date departureEnd}
+    
+    class Flight{
+    +Date createdAt}
+    
+    class FlightPackageInterface{
+    <<interface>>
+    +number id
+    +string description
+    +number amount
+    }
+    
+    class FlightPackage{
+    +Date createdAt}
+    
+    class BookingInterface{
+    <<interface>>
+    +number id
+    +number userId
+    +number packageId
+    }
+    
+    class Booking{
+    +Date createdAt}
+    
+    class Status{
+    <<enumeration>>
+    pending
+    success
+    denied}
+    
+    class StripeToProductInterface{
+    <<interface>>
+    +number id
+    +string stripeSessionId
+    +number externalProductId
+    }
+    
+    class StripeToProduct{
+    +Date createdAt}
+    
+    Flight  "1" --* "*" FlightPackage
+    BookingInterface --o Status
+    
+
 ```
